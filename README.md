@@ -285,7 +285,7 @@ Once the application is running, access the interactive API documentation at:
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `SPRING_DATASOURCE_URL` | PostgreSQL connection URL | Neon cloud URL |
-| `SPRING_DATASOURCE_USERNAME` | DB username | neondb_owner |
+| `SPRING_DATASOURCE_USERNAME` | DB username | (set in .env) |
 | `SPRING_DATASOURCE_PASSWORD` | DB password | (set in properties) |
 | `SPRING_JPA_HIBERNATE_DDL_AUTO` | Schema strategy | update |
 | `APP_JWT_SECRET` | JWT signing secret | (set in properties) |
