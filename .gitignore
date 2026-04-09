@@ -53,6 +53,8 @@ logs/
 # Spring Boot
 application-local.properties
 
-# Environment
-*.env
+# Environment — NEVER commit real credentials / Ne jamais commiter de vrais identifiants
+.env
 .env.*
+*.env
+!.env.example
