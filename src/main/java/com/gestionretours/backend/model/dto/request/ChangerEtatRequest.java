@@ -1,0 +1,24 @@
+package com.gestionretours.backend.model.dto.request;
+
+import com.gestionretours.backend.model.enums.EtatTraitement;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * Change state request DTO / DTO de demande de changement d'état
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChangerEtatRequest {
+
+    @NotNull(message = "New state is required / Le nouvel état est requis")
+    private EtatTraitement nouvelEtat;
+
+    @NotNull(message = "Employee ID is required / L'ID employé est requis")
+    private Long employeId;
+
+    private String commentaire;
+}
