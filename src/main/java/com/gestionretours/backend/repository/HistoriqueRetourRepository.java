@@ -1,0 +1,18 @@
+package com.gestionretours.backend.repository;
+
+import com.gestionretours.backend.model.entity.HistoriqueRetour;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * Repository for HistoriqueRetour entity / Référentiel pour l'entité HistoriqueRetour
+ */
+@Repository
+public interface HistoriqueRetourRepository extends JpaRepository<HistoriqueRetour, Long> {
+
+    List<HistoriqueRetour> findByRetour_IdOrderByDateDesc(Long retourId);
+
+    List<HistoriqueRetour> findTop10ByOrderByDateDesc();
+}
