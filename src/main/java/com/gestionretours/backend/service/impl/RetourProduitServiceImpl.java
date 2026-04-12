@@ -15,6 +15,7 @@ import com.gestionretours.backend.repository.UtilisateurRepository;
 import com.gestionretours.backend.service.RetourProduitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +62,7 @@ public class RetourProduitServiceImpl implements RetourProduitService {
     }
 
     @Override
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public RetourProduitResponse create(RetourRequest request) {
         Utilisateur utilisateur = null;
@@ -94,6 +96,7 @@ public class RetourProduitServiceImpl implements RetourProduitService {
     }
 
     @Override
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public RetourProduitResponse update(Long id, RetourRequest request) {
         RetourProduit retour = retourProduitRepository.findById(id)
@@ -115,6 +118,7 @@ public class RetourProduitServiceImpl implements RetourProduitService {
     }
 
     @Override
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public void delete(Long id) {
         if (!retourProduitRepository.existsById(id)) {
@@ -125,6 +129,7 @@ public class RetourProduitServiceImpl implements RetourProduitService {
     }
 
     @Override
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public RetourProduitResponse changerEtat(Long id, ChangerEtatRequest request) {
         RetourProduit retour = retourProduitRepository.findById(id)

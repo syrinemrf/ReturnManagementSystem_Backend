@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @Tag(name = "Authentication", description = "Authentication endpoints / Points de terminaison d'authentification")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:80"})
 @RequiredArgsConstructor
 public class AuthController {
 

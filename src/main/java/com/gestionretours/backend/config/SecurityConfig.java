@@ -32,7 +32,7 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
 
     private static final String[] PUBLIC_URLS = {
-            "/api/auth/**",
+            "/api/auth/login",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/api-docs/**",
@@ -49,6 +49,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_URLS).permitAll()
+                        .requestMatchers("/api/auth/register").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

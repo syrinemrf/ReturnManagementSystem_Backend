@@ -12,6 +12,7 @@ import com.gestionretours.backend.repository.RetourProduitRepository;
 import com.gestionretours.backend.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final EntityMapper entityMapper;
 
     @Override
+    @Cacheable("dashboardStats")
     @Transactional(readOnly = true)
     public DashboardStatsResponse getStats() {
         long total = retourProduitRepository.count();

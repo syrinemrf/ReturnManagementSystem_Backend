@@ -3,8 +3,10 @@ package com.gestionretours.backend.config;
 import com.gestionretours.backend.model.entity.*;
 import com.gestionretours.backend.model.enums.*;
 import com.gestionretours.backend.repository.*;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -25,11 +27,23 @@ public class DataInitializer implements CommandLineRunner {
     private final NonConformiteRepository nonConformiteRepository;
     private final HistoriqueRetourRepository historiqueRetourRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EntityManager entityManager;
+
+    @Value("${app.data.force-reinit:false}")
+    private boolean forceReinit;
 
     @Override
     @Transactional
     public void run(String... args) {
-        if (utilisateurRepository.count() > 0) {
+        if (forceReinit) {
+            log.warn("Force re-initialization requested — clearing all data...");
+            historiqueRetourRepository.deleteAllInBatch();
+            nonConformiteRepository.deleteAllInBatch();
+            retourProduitRepository.deleteAllInBatch();
+            utilisateurRepository.deleteAllInBatch();
+            entityManager.flush();
+            entityManager.clear();
+        } else if (utilisateurRepository.count() > 0) {
             log.info("Database already initialized, skipping seed data");
             return;
         }

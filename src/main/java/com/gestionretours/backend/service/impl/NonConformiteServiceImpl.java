@@ -12,6 +12,7 @@ import com.gestionretours.backend.repository.RetourProduitRepository;
 import com.gestionretours.backend.service.NonConformiteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +58,7 @@ public class NonConformiteServiceImpl implements NonConformiteService {
     }
 
     @Override
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public NonConformiteResponse create(NonConformiteRequest request) {
         RetourProduit retour = null;
@@ -78,6 +80,7 @@ public class NonConformiteServiceImpl implements NonConformiteService {
     }
 
     @Override
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public NonConformiteResponse update(Long id, NonConformiteRequest request) {
         NonConformite nc = nonConformiteRepository.findById(id)
@@ -99,6 +102,7 @@ public class NonConformiteServiceImpl implements NonConformiteService {
     }
 
     @Override
+    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public void delete(Long id) {
         if (!nonConformiteRepository.existsById(id)) {
