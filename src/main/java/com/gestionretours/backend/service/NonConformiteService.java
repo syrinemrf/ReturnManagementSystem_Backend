@@ -1,24 +1,98 @@
 package com.gestionretours.backend.service;
 
+import com.gestionretours.backend.converter.NonConformiteConverter;
 import com.gestionretours.backend.model.dto.request.NonConformiteRequest;
 import com.gestionretours.backend.model.dto.response.NonConformiteResponse;
+import com.gestionretours.backend.model.entity.NonConformite;
+import com.gestionretours.backend.model.entity.RetourProduit;
+import com.gestionretours.backend.repository.NonConformiteRepository;
+import com.gestionretours.backend.repository.RetourProduitRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Non-conformity service interface / Interface du service de non-conformité
- */
-public interface NonConformiteService {
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class NonConformiteService {
 
-    List<NonConformiteResponse> findAll();
+    private final NonConformiteRepository nonConformiteRepository;
+    private final RetourProduitRepository retourProduitRepository;
+    private final NonConformiteConverter nonConformiteConverter;
 
-    NonConformiteResponse findById(Long id);
+    @Transactional(readOnly = true)
+    public List<NonConformiteResponse> findAll() {
+        return nonConformiteRepository.findAll()
+                .stream()
+                .map(nonConformiteConverter::toDto)
+                .collect(Collectors.toList());
+    }
 
-    List<NonConformiteResponse> findByRetourId(Long retourId);
+    @Transactional(readOnly = true)
+    public NonConformiteResponse findById(Long id) {
+        return nonConformiteRepository.findById(id)
+                .map(nonConformiteConverter::toDto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Non-conformité introuvable avec l'id: " + id));
+    }
 
-    NonConformiteResponse create(NonConformiteRequest request);
+    @Transactional(readOnly = true)
+    public List<NonConformiteResponse> findByRetourId(Long retourId) {
+        return nonConformiteRepository.findByRetour_Id(retourId)
+                .stream()
+                .map(nonConformiteConverter::toDto)
+                .collect(Collectors.toList());
+    }
 
-    NonConformiteResponse update(Long id, NonConformiteRequest request);
+    @CacheEvict(value = "dashboardStats", allEntries = true)
+    @Transactional
+    public NonConformiteResponse create(NonConformiteRequest request) {
+        RetourProduit retour = null;
+        if (request.getRetourId() != null) {
+            retour = retourProduitRepository.findById(request.getRetourId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Retour introuvable avec l'id: " + request.getRetourId()));
+        }
 
-    void delete(Long id);
+        NonConformite nc = nonConformiteConverter.toEntity(request);
+        nc.setRetour(retour);
+        nc = nonConformiteRepository.save(nc);
+        log.debug("Non-conformité créée avec l'id: {}", nc.getId());
+        return nonConformiteConverter.toDto(nc);
+    }
+
+    @CacheEvict(value = "dashboardStats", allEntries = true)
+    @Transactional
+    public NonConformiteResponse update(Long id, NonConformiteRequest request) {
+        NonConformite nc = nonConformiteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Non-conformité introuvable avec l'id: " + id));
+
+        nonConformiteConverter.updateEntityFromRequest(request, nc);
+
+        if (request.getRetourId() != null) {
+            RetourProduit retour = retourProduitRepository.findById(request.getRetourId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Retour introuvable avec l'id: " + request.getRetourId()));
+            nc.setRetour(retour);
+        }
+
+        nc = nonConformiteRepository.save(nc);
+        return nonConformiteConverter.toDto(nc);
+    }
+
+    @CacheEvict(value = "dashboardStats", allEntries = true)
+    @Transactional
+    public void delete(Long id) {
+        nonConformiteRepository.findById(id).ifPresentOrElse(
+                nc -> nonConformiteRepository.deleteById(id),
+                () -> { throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Non-conformité introuvable avec l'id: " + id); }
+        );
+        log.debug("Non-conformité supprimée avec l'id: {}", id);
+    }
 }
