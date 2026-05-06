@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gestionretours.backend.model.enums.EtatTraitement;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +16,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "retours_produit")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -40,11 +41,9 @@ public class RetourProduit {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Builder.Default
     @Column(nullable = false)
     private EtatTraitement etatTraitement = EtatTraitement.EN_ATTENTE;
 
-    @Builder.Default
     @Column(updatable = false)
     private LocalDateTime date = LocalDateTime.now();
 

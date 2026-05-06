@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gestionretours.backend.model.enums.Gravite;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +16,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "non_conformites")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -29,11 +30,9 @@ public class NonConformite {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Builder.Default
     @Column(nullable = false)
     private Gravite gravite = Gravite.MOYENNE;
 
-    @Builder.Default
     private LocalDateTime date = LocalDateTime.now();
 
     @NotBlank

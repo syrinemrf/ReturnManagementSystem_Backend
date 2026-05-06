@@ -1,7 +1,6 @@
 package com.gestionretours.backend.model.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,6 @@ import java.util.List;
  * Dashboard statistics response DTO / DTO de réponse statistiques tableau de bord
  */
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class DashboardStatsResponse {

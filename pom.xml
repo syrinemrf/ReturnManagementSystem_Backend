@@ -25,6 +25,14 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- DevTools (redémarrage automatique en développement) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -81,6 +89,13 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
 			<scope>runtime</scope>
+		</dependency>
+
+		<!-- ModelMapper -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>3.2.0</version>
 		</dependency>
 
 		<!-- Cache (in-memory, no external dependency required) -->

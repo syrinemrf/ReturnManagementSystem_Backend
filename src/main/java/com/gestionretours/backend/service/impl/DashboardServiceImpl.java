@@ -1,6 +1,7 @@
 package com.gestionretours.backend.service.impl;
 
-import com.gestionretours.backend.config.EntityMapper;
+import com.gestionretours.backend.converter.HistoriqueRetourConverter;
+import com.gestionretours.backend.converter.RetourProduitConverter;
 import com.gestionretours.backend.model.dto.response.DashboardStatsResponse;
 import com.gestionretours.backend.model.dto.response.HistoriqueRetourResponse;
 import com.gestionretours.backend.model.dto.response.RetourProduitResponse;
@@ -32,7 +33,8 @@ public class DashboardServiceImpl implements DashboardService {
     private final RetourProduitRepository retourProduitRepository;
     private final NonConformiteRepository nonConformiteRepository;
     private final HistoriqueRetourRepository historiqueRetourRepository;
-    private final EntityMapper entityMapper;
+    private final RetourProduitConverter retourProduitConverter;
+    private final HistoriqueRetourConverter historiqueRetourConverter;
 
     @Override
     @Cacheable("dashboardStats")
@@ -58,28 +60,28 @@ public class DashboardServiceImpl implements DashboardService {
         List<RetourProduitResponse> recentRetours = retourProduitRepository
                 .findTop5ByOrderByDateDesc()
                 .stream()
-                .map(entityMapper::toRetourResponse)
+                .map(retourProduitConverter::toDto)
                 .collect(Collectors.toList());
 
         List<HistoriqueRetourResponse> recentActivite = historiqueRetourRepository
                 .findTop10ByOrderByDateDesc()
                 .stream()
-                .map(entityMapper::toHistoriqueResponse)
+                .map(historiqueRetourConverter::toDto)
                 .collect(Collectors.toList());
 
-        return DashboardStatsResponse.builder()
-                .totalRetours(total)
-                .retoursEnAttente(enAttente)
-                .retoursEnCours(enCours)
-                .retoursValides(valides)
-                .retoursTraites(traites)
-                .retoursRejetes(rejetes)
-                .totalNonConformites(totalNc)
-                .nonConformitesCritiques(critiques)
-                .nonConformitesHautes(hautes)
-                .tauxResolution(tauxResolution)
-                .recentRetours(recentRetours)
-                .recentActivite(recentActivite)
-                .build();
+        DashboardStatsResponse stats = new DashboardStatsResponse();
+        stats.setTotalRetours(total);
+        stats.setRetoursEnAttente(enAttente);
+        stats.setRetoursEnCours(enCours);
+        stats.setRetoursValides(valides);
+        stats.setRetoursTraites(traites);
+        stats.setRetoursRejetes(rejetes);
+        stats.setTotalNonConformites(totalNc);
+        stats.setNonConformitesCritiques(critiques);
+        stats.setNonConformitesHautes(hautes);
+        stats.setTauxResolution(tauxResolution);
+        stats.setRecentRetours(recentRetours);
+        stats.setRecentActivite(recentActivite);
+        return stats;
     }
 }

@@ -5,7 +5,9 @@ import com.gestionretours.backend.model.enums.EtatTraitement;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +17,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "historique_retours")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -38,7 +39,6 @@ public class HistoriqueRetour {
     @JoinColumn(name = "employe_id")
     private Utilisateur employe;
 
-    @Builder.Default
     private LocalDateTime date = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)

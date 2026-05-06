@@ -1,16 +1,16 @@
 package com.gestionretours.backend.service.impl;
 
-import com.gestionretours.backend.config.EntityMapper;
-import com.gestionretours.backend.exception.ResourceNotFoundException;
+import com.gestionretours.backend.converter.NonConformiteConverter;
 import com.gestionretours.backend.model.dto.request.NonConformiteRequest;
 import com.gestionretours.backend.model.dto.response.NonConformiteResponse;
 import com.gestionretours.backend.model.entity.NonConformite;
 import com.gestionretours.backend.model.entity.RetourProduit;
-import com.gestionretours.backend.model.enums.Gravite;
 import com.gestionretours.backend.repository.NonConformiteRepository;
 import com.gestionretours.backend.repository.RetourProduitRepository;
 import com.gestionretours.backend.service.NonConformiteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -29,14 +29,14 @@ public class NonConformiteServiceImpl implements NonConformiteService {
 
     private final NonConformiteRepository nonConformiteRepository;
     private final RetourProduitRepository retourProduitRepository;
-    private final EntityMapper entityMapper;
+    private final NonConformiteConverter nonConformiteConverter;
 
     @Override
     @Transactional(readOnly = true)
     public List<NonConformiteResponse> findAll() {
         return nonConformiteRepository.findAll()
                 .stream()
-                .map(entityMapper::toNonConformiteResponse)
+                .map(nonConformiteConverter::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -44,8 +44,8 @@ public class NonConformiteServiceImpl implements NonConformiteService {
     @Transactional(readOnly = true)
     public NonConformiteResponse findById(Long id) {
         NonConformite nc = nonConformiteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("NonConformite", "id", id));
-        return entityMapper.toNonConformiteResponse(nc);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Non-conformité introuvable avec l'id: " + id));
+        return nonConformiteConverter.toDto(nc);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class NonConformiteServiceImpl implements NonConformiteService {
     public List<NonConformiteResponse> findByRetourId(Long retourId) {
         return nonConformiteRepository.findByRetour_Id(retourId)
                 .stream()
-                .map(entityMapper::toNonConformiteResponse)
+                .map(nonConformiteConverter::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -64,19 +64,14 @@ public class NonConformiteServiceImpl implements NonConformiteService {
         RetourProduit retour = null;
         if (request.getRetourId() != null) {
             retour = retourProduitRepository.findById(request.getRetourId())
-                    .orElseThrow(() -> new ResourceNotFoundException("RetourProduit", "id", request.getRetourId()));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Retour introuvable avec l'id: " + request.getRetourId()));
         }
 
-        NonConformite nc = NonConformite.builder()
-                .description(request.getDescription())
-                .gravite(request.getGravite() != null ? request.getGravite() : Gravite.MOYENNE)
-                .produit(request.getProduit())
-                .retour(retour)
-                .build();
-
+        NonConformite nc = nonConformiteConverter.toEntity(request);
+        nc.setRetour(retour);
         nc = nonConformiteRepository.save(nc);
         log.debug("Created NonConformite with id: {}", nc.getId());
-        return entityMapper.toNonConformiteResponse(nc);
+        return nonConformiteConverter.toDto(nc);
     }
 
     @Override
@@ -84,21 +79,17 @@ public class NonConformiteServiceImpl implements NonConformiteService {
     @Transactional
     public NonConformiteResponse update(Long id, NonConformiteRequest request) {
         NonConformite nc = nonConformiteRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("NonConformite", "id", id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Non-conformité introuvable avec l'id: " + id));
 
-        nc.setDescription(request.getDescription());
-        nc.setProduit(request.getProduit());
-        if (request.getGravite() != null) {
-            nc.setGravite(request.getGravite());
-        }
+        nonConformiteConverter.updateEntityFromRequest(request, nc);
         if (request.getRetourId() != null) {
             RetourProduit retour = retourProduitRepository.findById(request.getRetourId())
-                    .orElseThrow(() -> new ResourceNotFoundException("RetourProduit", "id", request.getRetourId()));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Retour introuvable avec l'id: " + request.getRetourId()));
             nc.setRetour(retour);
         }
 
         nc = nonConformiteRepository.save(nc);
-        return entityMapper.toNonConformiteResponse(nc);
+        return nonConformiteConverter.toDto(nc);
     }
 
     @Override
@@ -106,7 +97,7 @@ public class NonConformiteServiceImpl implements NonConformiteService {
     @Transactional
     public void delete(Long id) {
         if (!nonConformiteRepository.existsById(id)) {
-            throw new ResourceNotFoundException("NonConformite", "id", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Non-conformité introuvable avec l'id: " + id);
         }
         nonConformiteRepository.deleteById(id);
         log.debug("Deleted NonConformite with id: {}", id);

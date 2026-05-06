@@ -51,45 +51,61 @@ public class DataInitializer implements CommandLineRunner {
         log.info("Initializing database with realistic company data...");
 
         // ── Users / Utilisateurs ──────────────────────────────────────
-        Utilisateur admin = utilisateurRepository.save(Utilisateur.builder()
-                .nom("Admin Système").email("admin@retours.com")
-                .motDePasse(passwordEncoder.encode("Admin123!"))
-                .role(RoleUtilisateur.ROLE_ADMIN).build());
+        Utilisateur admin = new Utilisateur();
+        admin.setNom("Admin Système");
+        admin.setEmail("admin@retours.com");
+        admin.setMotDePasse(passwordEncoder.encode("Admin123!"));
+        admin.setRole(RoleUtilisateur.ROLE_ADMIN);
+        admin = utilisateurRepository.save(admin);
 
-        Utilisateur qualite1 = utilisateurRepository.save(Utilisateur.builder()
-                .nom("Responsable Qualité").email("qualite@retours.com")
-                .motDePasse(passwordEncoder.encode("Qualite123!"))
-                .role(RoleUtilisateur.ROLE_QUALITE).build());
+        Utilisateur qualite1 = new Utilisateur();
+        qualite1.setNom("Responsable Qualité");
+        qualite1.setEmail("qualite@retours.com");
+        qualite1.setMotDePasse(passwordEncoder.encode("Qualite123!"));
+        qualite1.setRole(RoleUtilisateur.ROLE_QUALITE);
+        qualite1 = utilisateurRepository.save(qualite1);
 
-        Utilisateur qualite2 = utilisateurRepository.save(Utilisateur.builder()
-                .nom("Nadia Mansouri").email("n.mansouri@qualite.com")
-                .motDePasse(passwordEncoder.encode("Qualite123!"))
-                .role(RoleUtilisateur.ROLE_QUALITE).build());
+        Utilisateur qualite2 = new Utilisateur();
+        qualite2.setNom("Nadia Mansouri");
+        qualite2.setEmail("n.mansouri@qualite.com");
+        qualite2.setMotDePasse(passwordEncoder.encode("Qualite123!"));
+        qualite2.setRole(RoleUtilisateur.ROLE_QUALITE);
+        qualite2 = utilisateurRepository.save(qualite2);
 
-        Utilisateur emp1 = utilisateurRepository.save(Utilisateur.builder()
-                .nom("Employé Test").email("employe@retours.com")
-                .motDePasse(passwordEncoder.encode("Employe123!"))
-                .role(RoleUtilisateur.ROLE_EMPLOYE).build());
+        Utilisateur emp1 = new Utilisateur();
+        emp1.setNom("Employé Test");
+        emp1.setEmail("employe@retours.com");
+        emp1.setMotDePasse(passwordEncoder.encode("Employe123!"));
+        emp1.setRole(RoleUtilisateur.ROLE_EMPLOYE);
+        emp1 = utilisateurRepository.save(emp1);
 
-        Utilisateur emp2 = utilisateurRepository.save(Utilisateur.builder()
-                .nom("Karim Bouzidi").email("k.bouzidi@entreprise.com")
-                .motDePasse(passwordEncoder.encode("Employe123!"))
-                .role(RoleUtilisateur.ROLE_EMPLOYE).build());
+        Utilisateur emp2 = new Utilisateur();
+        emp2.setNom("Karim Bouzidi");
+        emp2.setEmail("k.bouzidi@entreprise.com");
+        emp2.setMotDePasse(passwordEncoder.encode("Employe123!"));
+        emp2.setRole(RoleUtilisateur.ROLE_EMPLOYE);
+        emp2 = utilisateurRepository.save(emp2);
 
-        Utilisateur emp3 = utilisateurRepository.save(Utilisateur.builder()
-                .nom("Salma Trabelsi").email("s.trabelsi@entreprise.com")
-                .motDePasse(passwordEncoder.encode("Employe123!"))
-                .role(RoleUtilisateur.ROLE_EMPLOYE).build());
+        Utilisateur emp3 = new Utilisateur();
+        emp3.setNom("Salma Trabelsi");
+        emp3.setEmail("s.trabelsi@entreprise.com");
+        emp3.setMotDePasse(passwordEncoder.encode("Employe123!"));
+        emp3.setRole(RoleUtilisateur.ROLE_EMPLOYE);
+        emp3 = utilisateurRepository.save(emp3);
 
-        Utilisateur emp4 = utilisateurRepository.save(Utilisateur.builder()
-                .nom("Youssef Chaabane").email("y.chaabane@entreprise.com")
-                .motDePasse(passwordEncoder.encode("Employe123!"))
-                .role(RoleUtilisateur.ROLE_EMPLOYE).build());
+        Utilisateur emp4 = new Utilisateur();
+        emp4.setNom("Youssef Chaabane");
+        emp4.setEmail("y.chaabane@entreprise.com");
+        emp4.setMotDePasse(passwordEncoder.encode("Employe123!"));
+        emp4.setRole(RoleUtilisateur.ROLE_EMPLOYE);
+        emp4 = utilisateurRepository.save(emp4);
 
-        Utilisateur emp5 = utilisateurRepository.save(Utilisateur.builder()
-                .nom("Ines Ben Ali").email("i.benali@entreprise.com")
-                .motDePasse(passwordEncoder.encode("Employe123!"))
-                .role(RoleUtilisateur.ROLE_EMPLOYE).build());
+        Utilisateur emp5 = new Utilisateur();
+        emp5.setNom("Ines Ben Ali");
+        emp5.setEmail("i.benali@entreprise.com");
+        emp5.setMotDePasse(passwordEncoder.encode("Employe123!"));
+        emp5.setRole(RoleUtilisateur.ROLE_EMPLOYE);
+        emp5 = utilisateurRepository.save(emp5);
 
         // ── Product Returns / Retours Produits ────────────────────────
         // Défaut de fabrication (8)
@@ -201,40 +217,69 @@ public class DataInitializer implements CommandLineRunner {
 
         // ── History / Historique ──────────────────────────────────────
         for (RetourProduit r : allRetours) {
-            historiqueRetourRepository.save(HistoriqueRetour.builder()
-                    .retour(r).action("Retour créé").employe(r.getUtilisateur())
-                    .nouvelEtat(EtatTraitement.EN_ATTENTE).build());
+            HistoriqueRetour h = new HistoriqueRetour();
+            h.setRetour(r);
+            h.setAction("Retour créé");
+            h.setEmploye(r.getUtilisateur());
+            h.setNouvelEtat(EtatTraitement.EN_ATTENTE);
+            historiqueRetourRepository.save(h);
         }
 
         // State transitions for EN_COURS items
         for (RetourProduit r : List.of(r2, r6, r10, r14, r18, r22, r27, r31, r35)) {
-            historiqueRetourRepository.save(HistoriqueRetour.builder()
-                    .retour(r).action("Pris en charge par l'équipe qualité").employe(qualite1)
-                    .ancienEtat(EtatTraitement.EN_ATTENTE).nouvelEtat(EtatTraitement.EN_COURS).build());
+            HistoriqueRetour h = new HistoriqueRetour();
+            h.setRetour(r);
+            h.setAction("Pris en charge par l'équipe qualité");
+            h.setEmploye(qualite1);
+            h.setAncienEtat(EtatTraitement.EN_ATTENTE);
+            h.setNouvelEtat(EtatTraitement.EN_COURS);
+            historiqueRetourRepository.save(h);
         }
         // TRAITE transitions
         for (RetourProduit r : List.of(r3, r8, r11, r17, r23, r25, r29, r37)) {
-            historiqueRetourRepository.save(HistoriqueRetour.builder()
-                    .retour(r).action("Pris en charge par l'équipe qualité").employe(qualite2)
-                    .ancienEtat(EtatTraitement.EN_ATTENTE).nouvelEtat(EtatTraitement.EN_COURS).build());
-            historiqueRetourRepository.save(HistoriqueRetour.builder()
-                    .retour(r).action("Traitement terminé").employe(qualite1)
-                    .ancienEtat(EtatTraitement.EN_COURS).nouvelEtat(EtatTraitement.TRAITE).build());
+            HistoriqueRetour h1 = new HistoriqueRetour();
+            h1.setRetour(r);
+            h1.setAction("Pris en charge par l'équipe qualité");
+            h1.setEmploye(qualite2);
+            h1.setAncienEtat(EtatTraitement.EN_ATTENTE);
+            h1.setNouvelEtat(EtatTraitement.EN_COURS);
+            historiqueRetourRepository.save(h1);
+
+            HistoriqueRetour h2 = new HistoriqueRetour();
+            h2.setRetour(r);
+            h2.setAction("Traitement terminé");
+            h2.setEmploye(qualite1);
+            h2.setAncienEtat(EtatTraitement.EN_COURS);
+            h2.setNouvelEtat(EtatTraitement.TRAITE);
+            historiqueRetourRepository.save(h2);
         }
         // VALIDE transitions
         for (RetourProduit r : List.of(r5, r13, r21, r28, r34)) {
-            historiqueRetourRepository.save(HistoriqueRetour.builder()
-                    .retour(r).action("Pris en charge").employe(qualite1)
-                    .ancienEtat(EtatTraitement.EN_ATTENTE).nouvelEtat(EtatTraitement.EN_COURS).build());
-            historiqueRetourRepository.save(HistoriqueRetour.builder()
-                    .retour(r).action("Retour validé — remboursement ou remplacement approuvé").employe(qualite2)
-                    .ancienEtat(EtatTraitement.EN_COURS).nouvelEtat(EtatTraitement.VALIDE).build());
+            HistoriqueRetour h1 = new HistoriqueRetour();
+            h1.setRetour(r);
+            h1.setAction("Pris en charge");
+            h1.setEmploye(qualite1);
+            h1.setAncienEtat(EtatTraitement.EN_ATTENTE);
+            h1.setNouvelEtat(EtatTraitement.EN_COURS);
+            historiqueRetourRepository.save(h1);
+
+            HistoriqueRetour h2 = new HistoriqueRetour();
+            h2.setRetour(r);
+            h2.setAction("Retour validé — remboursement ou remplacement approuvé");
+            h2.setEmploye(qualite2);
+            h2.setAncienEtat(EtatTraitement.EN_COURS);
+            h2.setNouvelEtat(EtatTraitement.VALIDE);
+            historiqueRetourRepository.save(h2);
         }
         // REJETE transitions
         for (RetourProduit r : List.of(r7, r15, r33)) {
-            historiqueRetourRepository.save(HistoriqueRetour.builder()
-                    .retour(r).action("Retour rejeté — non éligible au traitement").employe(admin)
-                    .ancienEtat(EtatTraitement.EN_ATTENTE).nouvelEtat(EtatTraitement.REJETE).build());
+            HistoriqueRetour h = new HistoriqueRetour();
+            h.setRetour(r);
+            h.setAction("Retour rejeté — non éligible au traitement");
+            h.setEmploye(admin);
+            h.setAncienEtat(EtatTraitement.EN_ATTENTE);
+            h.setNouvelEtat(EtatTraitement.REJETE);
+            historiqueRetourRepository.save(h);
         }
 
         log.info("✅ Database initialized with {} returns, {} NC, {} users",
@@ -243,14 +288,23 @@ public class DataInitializer implements CommandLineRunner {
 
     private RetourProduit save(RetourProduitRepository repo, String produit, String client,
                                 String raison, String description, EtatTraitement etat, Utilisateur user) {
-        return repo.save(RetourProduit.builder()
-                .produit(produit).client(client).raison(raison)
-                .description(description).etatTraitement(etat).utilisateur(user).build());
+        RetourProduit r = new RetourProduit();
+        r.setProduit(produit);
+        r.setClient(client);
+        r.setRaison(raison);
+        r.setDescription(description);
+        r.setEtatTraitement(etat);
+        r.setUtilisateur(user);
+        return repo.save(r);
     }
 
     private void saveNC(NonConformiteRepository repo, String produit, Gravite gravite,
                          String description, RetourProduit retour) {
-        repo.save(NonConformite.builder()
-                .produit(produit).gravite(gravite).description(description).retour(retour).build());
+        NonConformite nc = new NonConformite();
+        nc.setProduit(produit);
+        nc.setGravite(gravite);
+        nc.setDescription(description);
+        nc.setRetour(retour);
+        repo.save(nc);
     }
 }
