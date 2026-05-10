@@ -1,6 +1,5 @@
 package com.gestionretours.backend.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gestionretours.backend.model.enums.EtatTraitement;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -11,15 +10,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Return history entity / Entité historique des retours
- */
+// Garde une trace de chaque changement d'état sur un retour — utile pour l'audit
 @Entity
 @Table(name = "historique_retours")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class HistoriqueRetour {
 
     @Id
@@ -49,6 +45,7 @@ public class HistoriqueRetour {
 
     @PrePersist
     protected void onCreate() {
+        // On force la date si elle n'a pas été initialisée avant l'insertion
         if (date == null) {
             date = LocalDateTime.now();
         }

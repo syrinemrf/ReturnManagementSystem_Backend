@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Repository for NonConformite entity / Référentiel pour l'entité NonConformite
- */
+// Accès BDD pour les non-conformités
 @Repository
 public interface NonConformiteRepository extends JpaRepository<NonConformite, Long> {
 

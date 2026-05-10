@@ -18,10 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * Spring Security configuration.
- * Configuration de Spring Security.
- */
+// Configuration principale de Spring Security
+// On gère ici : JWT, les URLs publiques, les rôles, le hashage des mots de passe
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -31,6 +29,7 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsServiceImpl userDetailsService;
 
+    // Ces URLs sont accessibles sans token — le reste nécessite une authentification
     private static final String[] PUBLIC_URLS = {
             "/api/auth/login",
             "/swagger-ui/**",
@@ -42,6 +41,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Pas de session côté serveur — on est full stateless avec JWT
+        // Le filtre JWT est ajouté avant le filtre d'auth classique de Spring
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configure(http))
@@ -67,6 +68,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // BCrypt avec strength 12 — bon équilibre sécurité/performance
         return new BCryptPasswordEncoder(12);
     }
 

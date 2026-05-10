@@ -7,10 +7,8 @@ import com.gestionretours.backend.model.enums.EtatTraitement;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-/**
- * Converter for RetourProduit entity and its DTOs.
- * Convertisseur pour l'entité RetourProduit et ses DTOs.
- */
+// Convertit entre RetourProduit et ses DTOs
+// Les champs liés aux relations (utilisateur) sont gérés manuellement pour éviter le LazyInitializationException
 @Component
 public class RetourProduitConverter {
 
@@ -26,10 +24,7 @@ public class RetourProduitConverter {
                 });
     }
 
-    /**
-     * Converts a RetourProduit entity to its response DTO.
-     * Convertit une entité RetourProduit en DTO de réponse.
-     */
+    // On mappe manuellement le nom et l'id de l'utilisateur après le mapping automatique
     public RetourProduitResponse toDto(RetourProduit entity) {
         if (entity == null) return null;
         RetourProduitResponse dto = modelMapper.map(entity, RetourProduitResponse.class);
@@ -40,10 +35,8 @@ public class RetourProduitConverter {
         return dto;
     }
 
-    /**
-     * Populates a new RetourProduit entity from the request DTO fields.
-     * Remplit une nouvelle entité RetourProduit à partir des champs du DTO de requête.
-     */
+    // Crée une nouvelle entité à partir des données de la requête
+    // L'état est forcé à EN_ATTENTE à la création, on ne fait pas confiance au client pour ça
     public RetourProduit toEntity(RetourRequest request) {
         if (request == null) return null;
         RetourProduit entity = new RetourProduit();
@@ -55,10 +48,7 @@ public class RetourProduitConverter {
         return entity;
     }
 
-    /**
-     * Updates mutable fields on an existing entity from the request DTO.
-     * Met à jour les champs modifiables d'une entité existante à partir du DTO de requête.
-     */
+    // Mise à jour des champs modifiables uniquement (l'état se change via changerEtat)
     public void updateEntityFromRequest(RetourRequest request, RetourProduit entity) {
         entity.setProduit(request.getProduit());
         entity.setClient(request.getClient());

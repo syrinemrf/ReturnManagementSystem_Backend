@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Non-conformity request DTO / DTO de demande de non-conformité
- */
+// Ce qu'on reçoit pour créer ou modifier une non-conformité
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

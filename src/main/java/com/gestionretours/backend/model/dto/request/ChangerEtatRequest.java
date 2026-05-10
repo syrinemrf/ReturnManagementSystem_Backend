@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Change state request DTO / DTO de demande de changement d'état
- */
+// Utilisé pour changer l'état d'un retour — on peut aussi ajouter un commentaire optionnel
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

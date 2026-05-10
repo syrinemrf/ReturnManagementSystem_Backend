@@ -7,10 +7,8 @@ import com.gestionretours.backend.model.enums.Gravite;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-/**
- * Converter for NonConformite entity and its DTOs.
- * Convertisseur pour l'entité NonConformite et ses DTOs.
- */
+// Convertit entre NonConformite et ses DTOs
+// Les champs liés au retour parent sont gérés manuellement
 @Component
 public class NonConformiteConverter {
 
@@ -26,10 +24,7 @@ public class NonConformiteConverter {
                 });
     }
 
-    /**
-     * Converts a NonConformite entity to its response DTO.
-     * Convertit une entité NonConformite en DTO de réponse.
-     */
+    // On récupère le retourId et le nom du produit concerné directement depuis la relation
     public NonConformiteResponse toDto(NonConformite entity) {
         if (entity == null) return null;
         NonConformiteResponse dto = modelMapper.map(entity, NonConformiteResponse.class);
@@ -40,10 +35,7 @@ public class NonConformiteConverter {
         return dto;
     }
 
-    /**
-     * Populates a new NonConformite entity from the request DTO fields.
-     * Remplit une nouvelle entité NonConformite à partir des champs du DTO de requête.
-     */
+    // Gravité par défaut à MOYENNE si non précisée dans la requête
     public NonConformite toEntity(NonConformiteRequest request) {
         if (request == null) return null;
         NonConformite entity = new NonConformite();
@@ -53,10 +45,7 @@ public class NonConformiteConverter {
         return entity;
     }
 
-    /**
-     * Updates mutable fields on an existing entity from the request DTO.
-     * Met à jour les champs modifiables d'une entité existante à partir du DTO de requête.
-     */
+    // On ne met à jour que la description, le produit et la gravité — le retour parent ne change pas
     public void updateEntityFromRequest(NonConformiteRequest request, NonConformite entity) {
         entity.setDescription(request.getDescription());
         entity.setProduit(request.getProduit());

@@ -5,10 +5,8 @@ import com.gestionretours.backend.model.entity.HistoriqueRetour;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-/**
- * Converter for HistoriqueRetour entity and its DTOs.
- * Convertisseur pour l'entité HistoriqueRetour et ses DTOs.
- */
+// Convertit entre HistoriqueRetour et son DTO
+// On extrait manuellement le nom de l'employé et l'id du retour pour éviter les erreurs lazy
 @Component
 public class HistoriqueRetourConverter {
 
@@ -24,10 +22,7 @@ public class HistoriqueRetourConverter {
                 });
     }
 
-    /**
-     * Converts a HistoriqueRetour entity to its response DTO.
-     * Convertit une entité HistoriqueRetour en DTO de réponse.
-     */
+    // Conversion de l'entité vers le DTO — on remplit retourId et employeNom manuellement
     public HistoriqueRetourResponse toDto(HistoriqueRetour entity) {
         if (entity == null) return null;
         HistoriqueRetourResponse dto = modelMapper.map(entity, HistoriqueRetourResponse.class);

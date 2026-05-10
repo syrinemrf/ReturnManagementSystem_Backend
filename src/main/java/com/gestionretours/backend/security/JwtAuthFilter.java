@@ -17,10 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/**
- * JWT authentication filter applied once per request.
- * Filtre d'authentification JWT appliqué une fois par requête.
- */
+// Filtre exécuté une seule fois par requête HTTP
+// Il lit le token JWT dans le header Authorization et configure l'authentification Spring Security
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -36,6 +34,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             String token = extractTokenFromRequest(request);
 
+            // Si le token est présent et valide, on charge l'utilisateur et on met l'auth dans le contexte
             if (StringUtils.hasText(token) && jwtUtils.validateToken(token)) {
                 String email = jwtUtils.getEmailFromToken(token);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
@@ -56,6 +55,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    // Extrait le token depuis le header Authorization en enlevant le préfixe "Bearer "
     private String extractTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

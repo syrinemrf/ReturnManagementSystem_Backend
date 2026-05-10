@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Authentication response DTO / DTO de réponse d'authentification
- */
+// Ce que le serveur renvoie après une connexion réussie — contient le token JWT et les infos de base
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

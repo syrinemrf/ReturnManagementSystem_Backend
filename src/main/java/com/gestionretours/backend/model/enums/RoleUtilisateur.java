@@ -1,9 +1,7 @@
 package com.gestionretours.backend.model.enums;
 
-/**
- * User roles for the application (ROLE_ prefix required by Spring Security).
- * Rôles utilisateur (préfixe ROLE_ requis par Spring Security).
- */
+// Les rôles disponibles dans l'appli
+// Le préfixe ROLE_ est obligatoire pour que Spring Security les reconnaise
 public enum RoleUtilisateur {
     ROLE_ADMIN,
     ROLE_QUALITE,

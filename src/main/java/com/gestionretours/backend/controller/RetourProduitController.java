@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Product returns controller / Contrôleur des retours produits
- */
+// Contrôleur principal pour les retours produits
+// Les employés peuvent créer, les qualité/admin peuvent modifier et changer l'état
 @RestController
 @RequestMapping("/api/retours")
 @Tag(name = "Retours", description = "Product return management / Gestion des retours produits")

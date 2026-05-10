@@ -14,9 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Authentication controller / Contrôleur d'authentification
- */
+// Endpoint d'authentification — login et register
+// register est protégé et réservé aux admins (voir SecurityConfig)
 @RestController
 @RequestMapping("/api/auth")
 @Tag(name = "Authentication", description = "Authentication endpoints / Points de terminaison d'authentification")

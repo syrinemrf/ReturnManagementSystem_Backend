@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Product return response DTO / DTO de réponse retour produit
- */
+// Ce que le frontend reçoit quand il consulte un retour produit
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

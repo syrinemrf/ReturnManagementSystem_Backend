@@ -5,10 +5,7 @@ import com.gestionretours.backend.model.entity.Utilisateur;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-/**
- * Converter for Utilisateur entity and its DTOs.
- * Convertisseur pour l'entité Utilisateur et ses DTOs.
- */
+// Convertit entre l'entité Utilisateur et son DTO de réponse
 @Component
 public class UtilisateurConverter {
 
@@ -18,10 +15,7 @@ public class UtilisateurConverter {
         this.modelMapper = modelMapper;
     }
 
-    /**
-     * Converts a Utilisateur entity to its response DTO.
-     * Convertit une entité Utilisateur en DTO de réponse.
-     */
+    // Conversion simple — ModelMapper s'occupe du mapping des champs
     public UtilisateurResponse toDto(Utilisateur entity) {
         if (entity == null) return null;
         return modelMapper.map(entity, UtilisateurResponse.class);

@@ -14,9 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Data initializer — seeds default users and realistic company data on first startup.
- */
+// Lance automatiquement au démarrage pour pré-remplir la BDD si elle est vide
+// Utile en dev/démo pour avoir des données réalistes sans import SQL manuel
 @Component
 @RequiredArgsConstructor
 @Slf4j

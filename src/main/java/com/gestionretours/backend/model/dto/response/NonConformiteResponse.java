@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Non-conformity response DTO / DTO de réponse non-conformité
- */
+// Données retournées pour une non-conformité — inclut le lien vers le retour concerné
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

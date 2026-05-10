@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Login request DTO / DTO de demande de connexion
- */
+// Ce que le client envoie pour se connecter — juste email + mot de passe
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

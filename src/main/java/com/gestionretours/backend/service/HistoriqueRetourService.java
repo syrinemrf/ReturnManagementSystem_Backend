@@ -5,7 +5,6 @@ import com.gestionretours.backend.model.dto.response.HistoriqueRetourResponse;
 import com.gestionretours.backend.repository.HistoriqueRetourRepository;
 import com.gestionretours.backend.repository.RetourProduitRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +13,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Service en lecture seule — l'historique est créé automatiquement dans RetourProduitService
+// On ne fait que consulter ici
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class HistoriqueRetourService {
 
     private final HistoriqueRetourRepository historiqueRetourRepository;
@@ -25,6 +25,7 @@ public class HistoriqueRetourService {
 
     @Transactional(readOnly = true)
     public List<HistoriqueRetourResponse> findByRetourId(Long retourId) {
+        // On vérifie que le retour existe avant de chercher son historique
         if (!retourProduitRepository.existsById(retourId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Retour introuvable avec l'id: " + retourId);
         }

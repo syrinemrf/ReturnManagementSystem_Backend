@@ -7,7 +7,6 @@ import com.gestionretours.backend.model.entity.Utilisateur;
 import com.gestionretours.backend.model.enums.RoleUtilisateur;
 import com.gestionretours.backend.repository.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,9 +16,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Service CRUD pour les utilisateurs — réservé aux admins
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UtilisateurService {
 
     private final UtilisateurRepository utilisateurRepository;
@@ -43,6 +42,7 @@ public class UtilisateurService {
 
     @Transactional
     public UtilisateurResponse create(RegisterRequest request) {
+        // Vérification de l'unicité de l'email avant de créer
         if (utilisateurRepository.existsByEmail(request.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email déjà utilisé: " + request.getEmail());
         }
@@ -51,10 +51,10 @@ public class UtilisateurService {
         utilisateur.setNom(request.getNom());
         utilisateur.setEmail(request.getEmail());
         utilisateur.setMotDePasse(passwordEncoder.encode(request.getMotDePasse()));
+        // Si aucun rôle n'est fourni, on met EMPLOYE par défaut
         utilisateur.setRole(request.getRole() != null ? request.getRole() : RoleUtilisateur.ROLE_EMPLOYE);
 
         utilisateur = utilisateurRepository.save(utilisateur);
-        log.debug("Utilisateur créé avec l'id: {}", utilisateur.getId());
         return utilisateurConverter.toDto(utilisateur);
     }
 
@@ -63,6 +63,7 @@ public class UtilisateurService {
         Utilisateur utilisateur = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable avec l'id: " + id));
 
+        // On vérifie que le nouvel email n'appartient pas à quelqu'un d'autre
         if (!utilisateur.getEmail().equals(request.getEmail())
                 && utilisateurRepository.existsByEmail(request.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email déjà utilisé: " + request.getEmail());
@@ -70,6 +71,7 @@ public class UtilisateurService {
 
         utilisateur.setNom(request.getNom());
         utilisateur.setEmail(request.getEmail());
+        // On ne change le mot de passe que s'il est fourni dans la requête
         if (request.getMotDePasse() != null && !request.getMotDePasse().isBlank()) {
             utilisateur.setMotDePasse(passwordEncoder.encode(request.getMotDePasse()));
         }
@@ -87,6 +89,5 @@ public class UtilisateurService {
                 u -> utilisateurRepository.deleteById(id),
                 () -> { throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable avec l'id: " + id); }
         );
-        log.debug("Utilisateur supprimé avec l'id: {}", id);
     }
 }

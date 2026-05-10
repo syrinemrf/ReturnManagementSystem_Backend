@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Return history response DTO / DTO de réponse historique retour
- */
+// Représente une ligne dans l'historique des changements d'état d'un retour
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

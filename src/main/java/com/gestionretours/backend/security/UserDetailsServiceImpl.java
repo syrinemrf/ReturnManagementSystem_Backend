@@ -12,10 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Custom UserDetailsService implementation loading users from database.
- * Implémentation de UserDetailsService chargeant les utilisateurs depuis la base de données.
- */
+// Implémentation de UserDetailsService utilisée par Spring Security pour charger un utilisateur depuis la BDD
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {

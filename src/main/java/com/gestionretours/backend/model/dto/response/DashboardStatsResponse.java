@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * Dashboard statistics response DTO / DTO de réponse statistiques tableau de bord
- */
+// Toutes les stats retournées pour le tableau de bord en une seule requête
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

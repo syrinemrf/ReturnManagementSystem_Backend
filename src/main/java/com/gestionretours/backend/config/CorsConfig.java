@@ -5,10 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * CORS configuration to allow Angular frontend access.
- * Configuration CORS pour autoriser l'accès du frontend Angular.
- */
+// Configuration CORS pour permettre au frontend Angular de parler au backend
+// Les origines autorisées sont configurables via les properties
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 

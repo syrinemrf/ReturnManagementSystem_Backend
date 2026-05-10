@@ -1,6 +1,5 @@
 package com.gestionretours.backend.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gestionretours.backend.model.enums.RoleUtilisateur;
 import jakarta.persistence.*;
@@ -12,15 +11,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * User entity / Entité utilisateur
- */
+// Un utilisateur de l'appli : peut être admin, employé ou responsable qualité
 @Entity
 @Table(name = "utilisateurs")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Utilisateur {
 
     @Id
@@ -50,6 +46,7 @@ public class Utilisateur {
 
     @PrePersist
     protected void onCreate() {
+        // Valeurs par défaut au moment de l'insertion en BDD
         if (createdAt == null) {
             createdAt = LocalDateTime.now();
         }

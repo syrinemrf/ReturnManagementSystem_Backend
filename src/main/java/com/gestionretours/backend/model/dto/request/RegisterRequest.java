@@ -8,9 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Registration request DTO / DTO de demande d'inscription
- */
+// Données nécessaires pour créer un compte utilisateur
+// Le rôle est optionnel — par défaut on attribue ROLE_EMPLOYE
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Product return request DTO / DTO de demande de retour produit
- */
+// Données envoyées par le client pour créer ou modifier un retour produit
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

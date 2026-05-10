@@ -10,9 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Dashboard controller / Contrôleur du tableau de bord
- */
+// Retourne les statistiques agrégées pour le tableau de bord
 @RestController
 @RequestMapping("/api/dashboard")
 @Tag(name = "Dashboard", description = "Dashboard statistics / Statistiques du tableau de bord")

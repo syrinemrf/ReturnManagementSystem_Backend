@@ -10,16 +10,15 @@ import com.gestionretours.backend.model.enums.RoleUtilisateur;
 import com.gestionretours.backend.repository.UtilisateurRepository;
 import com.gestionretours.backend.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+// Service qui gère la connexion et l'inscription des utilisateurs
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthService {
 
     private final UtilisateurRepository utilisateurRepository;
@@ -29,13 +28,16 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
+        // On cherche l'utilisateur par email — si introuvable, on retourne 401 directement
         Utilisateur utilisateur = utilisateurRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou mot de passe invalide"));
 
+        // Vérification du mot de passe avec BCrypt
         if (!passwordEncoder.matches(request.getMotDePasse(), utilisateur.getMotDePasse())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Email ou mot de passe invalide");
         }
 
+        // Tout est OK, on génère le token JWT
         String token = jwtUtils.generateToken(utilisateur.getEmail(), utilisateur.getRole().name());
 
         AuthResponse response = new AuthResponse();
@@ -49,6 +51,7 @@ public class AuthService {
 
     @Transactional
     public UtilisateurResponse register(RegisterRequest request) {
+        // On vérifie d'abord que l'email n'est pas déjà pris
         if (utilisateurRepository.existsByEmail(request.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email déjà utilisé: " + request.getEmail());
         }
@@ -60,7 +63,6 @@ public class AuthService {
         utilisateur.setRole(request.getRole() != null ? request.getRole() : RoleUtilisateur.ROLE_EMPLOYE);
 
         utilisateur = utilisateurRepository.save(utilisateur);
-        log.debug("Utilisateur enregistré avec l'id: {}", utilisateur.getId());
         return utilisateurConverter.toDto(utilisateur);
     }
 }

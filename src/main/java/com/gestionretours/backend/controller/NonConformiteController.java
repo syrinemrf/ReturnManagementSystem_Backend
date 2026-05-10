@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Non-conformities controller / Contrôleur des non-conformités
- */
+// Gestion des non-conformités — création réservée aux rôles qualité/admin
 @RestController
 @RequestMapping("/api/non-conformites")
 @Tag(name = "Non-Conformites", description = "Non-conformity management / Gestion des non-conformités")

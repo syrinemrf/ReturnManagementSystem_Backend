@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Repository for HistoriqueRetour entity / Référentiel pour l'entité HistoriqueRetour
- */
+// Accès BDD pour l'historique — utilisé pour l'audit et l'activité récente du dashboard
 @Repository
 public interface HistoriqueRetourRepository extends JpaRepository<HistoriqueRetour, Long> {
 

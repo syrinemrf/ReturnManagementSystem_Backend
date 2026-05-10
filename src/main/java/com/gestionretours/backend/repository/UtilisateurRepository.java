@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-/**
- * Repository for Utilisateur entity / Référentiel pour l'entité Utilisateur
- */
+// Accès BDD pour les utilisateurs, Spring Data génère les requêtes automatiquement
 @Repository
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long> {
 

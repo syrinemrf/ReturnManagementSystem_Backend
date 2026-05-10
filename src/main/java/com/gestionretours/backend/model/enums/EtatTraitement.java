@@ -1,9 +1,6 @@
 package com.gestionretours.backend.model.enums;
 
-/**
- * Processing status for a product return.
- * État de traitement d'un retour produit.
- */
+// Les différents états possibles d'un retour — suit le cycle de vie du traitement
 public enum EtatTraitement {
     EN_ATTENTE,
     EN_COURS,

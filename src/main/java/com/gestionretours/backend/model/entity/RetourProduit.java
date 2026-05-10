@@ -1,6 +1,5 @@
 package com.gestionretours.backend.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gestionretours.backend.model.enums.EtatTraitement;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -10,15 +9,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Product return entity / Entité retour produit
- */
+// Entité principale du système — représente un retour de produit déposé par un client
 @Entity
 @Table(name = "retours_produit")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class RetourProduit {
 
     @Id
@@ -55,6 +51,7 @@ public class RetourProduit {
 
     @PrePersist
     protected void onCreate() {
+        // Initialisation des valeurs par défaut si elles ne sont pas déjà renseignées
         if (date == null) {
             date = LocalDateTime.now();
         }
@@ -65,6 +62,7 @@ public class RetourProduit {
 
     @PreUpdate
     protected void onUpdate() {
+        // On met à jour la date de modification à chaque changement sur l'entité
         updatedAt = LocalDateTime.now();
     }
 }

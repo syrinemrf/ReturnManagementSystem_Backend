@@ -9,9 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Repository for RetourProduit entity / Référentiel pour l'entité RetourProduit
- */
+// Accès BDD pour les retours produits — inclut des requêtes personnalisées pour les stats
 @Repository
 public interface RetourProduitRepository extends JpaRepository<RetourProduit, Long> {
 

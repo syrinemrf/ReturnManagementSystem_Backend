@@ -10,10 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-/**
- * JWT utility component for token generation and validation.
- * Composant utilitaire JWT pour la génération et validation des tokens.
- */
+// Utilitaire pour générer, valider et lire les tokens JWT
+// La clé secrète et la durée d'expiration viennent des properties
 @Component
 @Slf4j
 public class JwtUtils {
@@ -24,6 +22,7 @@ public class JwtUtils {
     @Value("${app.jwt.expiration}")
     private long jwtExpiration;
 
+    // On génère la clé de signature à partir du secret configé dans les properties
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }

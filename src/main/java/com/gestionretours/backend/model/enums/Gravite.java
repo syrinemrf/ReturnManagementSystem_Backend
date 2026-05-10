@@ -1,9 +1,6 @@
 package com.gestionretours.backend.model.enums;
 
-/**
- * Severity level for non-conformities.
- * Niveau de gravité des non-conformités.
- */
+// Niveau de gravité d'une non-conformité — du plus bénin au plus critique
 public enum Gravite {
     FAIBLE,
     MOYENNE,

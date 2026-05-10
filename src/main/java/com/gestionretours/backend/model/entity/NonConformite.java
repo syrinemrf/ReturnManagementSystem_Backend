@@ -1,6 +1,5 @@
 package com.gestionretours.backend.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gestionretours.backend.model.enums.Gravite;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -10,15 +9,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Non-conformity entity / Entité non-conformité
- */
+// Une non-conformité est liée à un retour — elle décrit un problème qualité détecté
 @Entity
 @Table(name = "non_conformites")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class NonConformite {
 
     @Id
@@ -45,6 +41,7 @@ public class NonConformite {
 
     @PrePersist
     protected void onCreate() {
+        // On s'assure que la date et la gravité sont toujours renseignées
         if (date == null) {
             date = LocalDateTime.now();
         }

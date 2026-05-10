@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Return history controller / Contrôleur de l'historique des retours
- */
+// Consultation de l'historique des retours — lecture seule, pas de création ici
 @RestController
 @RequestMapping("/api/historique")
 @Tag(name = "Historique", description = "Return history / Historique des retours")

@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * User response DTO / DTO de réponse utilisateur
- */
+// Ce qu'on renvoie au frontend quand on parle d'un utilisateur
+// Note : le mot de passe n'est jamais inclus ici, c'est voulu
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

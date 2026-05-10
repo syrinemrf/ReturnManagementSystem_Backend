@@ -8,8 +8,6 @@ import com.gestionretours.backend.model.entity.RetourProduit;
 import com.gestionretours.backend.repository.NonConformiteRepository;
 import com.gestionretours.backend.repository.RetourProduitRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +16,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Service pour les non-conformités liées aux retours produits
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class NonConformiteService {
 
     private final NonConformiteRepository nonConformiteRepository;
@@ -50,9 +48,9 @@ public class NonConformiteService {
                 .collect(Collectors.toList());
     }
 
-    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public NonConformiteResponse create(NonConformiteRequest request) {
+        // Le retour associé est optionnel, mais en pratique on devrait toujours en avoir un
         RetourProduit retour = null;
         if (request.getRetourId() != null) {
             retour = retourProduitRepository.findById(request.getRetourId())
@@ -63,11 +61,9 @@ public class NonConformiteService {
         NonConformite nc = nonConformiteConverter.toEntity(request);
         nc.setRetour(retour);
         nc = nonConformiteRepository.save(nc);
-        log.debug("Non-conformité créée avec l'id: {}", nc.getId());
         return nonConformiteConverter.toDto(nc);
     }
 
-    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public NonConformiteResponse update(Long id, NonConformiteRequest request) {
         NonConformite nc = nonConformiteRepository.findById(id)
@@ -86,13 +82,11 @@ public class NonConformiteService {
         return nonConformiteConverter.toDto(nc);
     }
 
-    @CacheEvict(value = "dashboardStats", allEntries = true)
     @Transactional
     public void delete(Long id) {
         nonConformiteRepository.findById(id).ifPresentOrElse(
                 nc -> nonConformiteRepository.deleteById(id),
                 () -> { throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Non-conformité introuvable avec l'id: " + id); }
         );
-        log.debug("Non-conformité supprimée avec l'id: {}", id);
     }
 }

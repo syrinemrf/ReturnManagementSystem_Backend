@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * OpenAPI / Swagger configuration.
- * Configuration OpenAPI / Swagger.
- */
+// Configuration Swagger — définit le titre de l'API et active l'authentification Bearer dans l'UI
 @Configuration
 @OpenAPIDefinition(
         info = @Info(

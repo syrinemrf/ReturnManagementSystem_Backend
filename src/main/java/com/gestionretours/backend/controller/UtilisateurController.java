@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Users controller / Contrôleur des utilisateurs
- */
+// Gestion des utilisateurs — accessible uniquement aux admins
 @RestController
 @RequestMapping("/api/utilisateurs")
 @Tag(name = "Utilisateurs", description = "User management / Gestion des utilisateurs")
