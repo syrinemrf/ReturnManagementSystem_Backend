@@ -98,10 +98,10 @@
 			<version>3.2.0</version>
 		</dependency>
 
-		<!-- Cache (in-memory, no external dependency required) -->
+		<!-- Mail (alertes non-conformités critiques/hautes) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-cache</artifactId>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
 		<!-- Test -->

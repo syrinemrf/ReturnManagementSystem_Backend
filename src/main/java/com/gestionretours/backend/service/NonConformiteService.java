@@ -5,6 +5,7 @@ import com.gestionretours.backend.model.dto.request.NonConformiteRequest;
 import com.gestionretours.backend.model.dto.response.NonConformiteResponse;
 import com.gestionretours.backend.model.entity.NonConformite;
 import com.gestionretours.backend.model.entity.RetourProduit;
+import com.gestionretours.backend.model.enums.Gravite;
 import com.gestionretours.backend.repository.NonConformiteRepository;
 import com.gestionretours.backend.repository.RetourProduitRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class NonConformiteService {
     private final NonConformiteRepository nonConformiteRepository;
     private final RetourProduitRepository retourProduitRepository;
     private final NonConformiteConverter nonConformiteConverter;
+    private final EmailService emailService;
 
     @Transactional(readOnly = true)
     public List<NonConformiteResponse> findAll() {
@@ -61,6 +63,12 @@ public class NonConformiteService {
         NonConformite nc = nonConformiteConverter.toEntity(request);
         nc.setRetour(retour);
         nc = nonConformiteRepository.save(nc);
+
+        // On envoie une alerte mail pour les gravités les plus sérieuses
+        if (nc.getGravite() == Gravite.HAUTE || nc.getGravite() == Gravite.CRITIQUE) {
+            emailService.envoyerAlerteNonConformite(nc.getProduit(), nc.getGravite().name(), nc.getDescription());
+        }
+
         return nonConformiteConverter.toDto(nc);
     }
 
