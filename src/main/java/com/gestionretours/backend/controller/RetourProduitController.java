@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/retours")
 @Tag(name = "Retours", description = "Product return management / Gestion des retours produits")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:80"})
 @RequiredArgsConstructor
 public class RetourProduitController {
 

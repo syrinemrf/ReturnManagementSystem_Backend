@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/utilisateurs")
 @Tag(name = "Utilisateurs", description = "User management / Gestion des utilisateurs")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:80"})
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 public class UtilisateurController {

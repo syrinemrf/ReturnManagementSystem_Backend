@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/non-conformites")
 @Tag(name = "Non-Conformites", description = "Non-conformity management / Gestion des non-conformités")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:80"})
 @RequiredArgsConstructor
 public class NonConformiteController {
 

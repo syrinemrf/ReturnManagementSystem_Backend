@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/historique")
 @Tag(name = "Historique", description = "Return history / Historique des retours")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:80"})
 @RequiredArgsConstructor
 public class HistoriqueRetourController {
 
