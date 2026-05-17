@@ -1,4 +1,4 @@
-﻿# Return Management System — Backend API
+﻿# Return Management System: Backend API
 
 A production-ready REST API for managing product returns, non-conformities, and quality tracking. Built with Spring Boot 3 and secured with JWT authentication.
 
@@ -6,21 +6,28 @@ A production-ready REST API for managing product returns, non-conformities, and 
 
 **[https://gestion-retours-frontend-176480887870.europe-west1.run.app](https://gestion-retours-frontend-176480887870.europe-west1.run.app)**
 
-> The frontend is deployed on Google Cloud Run and consumes this API.
-
----
+The frontend is deployed on Google Cloud Run and consumes this API.
 
 ## Features
 
-- **JWT Authentication** — Stateless, token-based auth with role-based access control (ADMIN, QUALITE, EMPLOYE)
-- **Product Return Lifecycle** — Full state machine: `EN_ATTENTE → EN_COURS → VALIDE / REJETE / TRAITE`
-- **Non-Conformity Management** — Create and track quality non-conformities with severity levels (FAIBLE, MOYENNE, HAUTE, CRITIQUE)
-- **Audit Trail** — Every state change is automatically recorded in the history
-- **Dashboard Statistics** — Aggregated metrics for quality monitoring
-- **Email Alerts** — Automatic notifications for critical/high-severity non-conformities
-- **Swagger UI** — Interactive API documentation at `/swagger-ui.html`
+- Stateless JWT authentication with role-based access control (ADMIN, QUALITE, EMPLOYE)
+- Product return lifecycle management with a defined state machine: `EN_ATTENTE` to `EN_COURS` to `VALIDE`, `REJETE`, or `TRAITE`
+- Non-conformity tracking with severity levels: FAIBLE, MOYENNE, HAUTE, CRITIQUE
+- Automatic audit trail on every state change
+- Aggregated dashboard statistics for quality monitoring
+- Automatic email alerts for critical and high-severity non-conformities
 
----
+## Role-Based Access
+
+The API enforces strict access control based on three roles:
+
+| Role | Permissions |
+|------|-------------|
+| **ADMIN** | Full access: user management, all CRUD operations, deletions |
+| **QUALITE** | Create and manage non-conformities, update return states, view dashboard |
+| **EMPLOYE** | Submit new returns and view data; no state changes or non-conformity management |
+
+All protected endpoints require a valid `Bearer` token in the `Authorization` header.
 
 ## Tech Stack
 
@@ -28,24 +35,19 @@ A production-ready REST API for managing product returns, non-conformities, and 
 |---|---|---|
 | Java | 17 | Programming language |
 | Spring Boot | 3.2.5 | Application framework |
-| Spring Security | 6.x | Authentication & authorization |
+| Spring Security | 6.x | Authentication and authorization |
 | Spring Data JPA | 3.x | ORM / database access |
 | PostgreSQL (Neon) | Cloud | Database |
-| jjwt | 0.11.5 | JWT token generation & validation |
+| jjwt | 0.11.5 | JWT token generation and validation |
 | Lombok | latest | Boilerplate reduction |
-| SpringDoc OpenAPI | 2.3.0 | Swagger UI documentation |
 | Maven | 3.9 | Build tool |
 | Docker | latest | Containerization |
-
----
 
 ## Prerequisites
 
 - Java 17+
 - Maven 3.9+ (or use the included `mvnw` wrapper)
 - A PostgreSQL database (connection string required via environment variable)
-
----
 
 ## Getting Started
 
@@ -74,41 +76,37 @@ docker-compose up -d --build
 docker-compose down
 ```
 
----
-
 ## Environment Variables
 
-All sensitive configuration is provided via environment variables — nothing is hardcoded.
+All sensitive configuration is provided via environment variables with no hardcoded secrets.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `SPRING_DATASOURCE_URL` | PostgreSQL JDBC connection URL | — |
-| `SPRING_DATASOURCE_USERNAME` | Database username | — |
-| `SPRING_DATASOURCE_PASSWORD` | Database password | — |
-| `APP_JWT_SECRET` | JWT signing secret (min. 256-bit) | — |
+| `SPRING_DATASOURCE_URL` | PostgreSQL JDBC connection URL | (required) |
+| `SPRING_DATASOURCE_USERNAME` | Database username | (required) |
+| `SPRING_DATASOURCE_PASSWORD` | Database password | (required) |
+| `APP_JWT_SECRET` | JWT signing secret (min. 256-bit) | (required) |
 | `APP_JWT_EXPIRATION` | JWT expiry in milliseconds | `86400000` (24h) |
 | `APP_CORS_ALLOWED_ORIGINS` | Comma-separated allowed origins | `http://localhost:4200` |
-| `MAIL_USERNAME` | SMTP email address for alerts | — |
-| `MAIL_PASSWORD` | SMTP email password | — |
-| `MAIL_ALERT_RECIPIENT` | Recipient for critical NC alerts | — |
+| `MAIL_USERNAME` | SMTP email address for alerts | (required) |
+| `MAIL_PASSWORD` | SMTP email password | (required) |
+| `MAIL_ALERT_RECIPIENT` | Recipient for critical NC alerts | (required) |
 | `SERVER_PORT` | Application port | `8080` |
 
 For local development, create `src/main/resources/application-local.properties` and set the variables there. This file is gitignored.
 
----
-
 ## API Endpoints
 
-All endpoints are prefixed with `/api`. Authentication endpoints are public; all others require a valid `Bearer` token.
+All endpoints are prefixed with `/api`. Authentication endpoints are public; all others require a valid Bearer token.
 
-### Authentication — `/api/auth`
+### Authentication
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| POST | `/api/auth/login` | Login — returns JWT token | Public |
+| POST | `/api/auth/login` | Login and receive a JWT token | Public |
 | POST | `/api/auth/register` | Register a new user | Public |
 
-### Product Returns — `/api/retours`
+### Product Returns
 
 | Method | Endpoint | Description | Role |
 |--------|----------|-------------|------|
@@ -120,18 +118,18 @@ All endpoints are prefixed with `/api`. Authentication endpoints are public; all
 | PUT | `/api/retours/{id}/etat` | Change return state | QUALITE, ADMIN |
 | DELETE | `/api/retours/{id}` | Delete a return | ADMIN |
 
-### Non-Conformities — `/api/non-conformites`
+### Non-Conformities
 
 | Method | Endpoint | Description | Role |
 |--------|----------|-------------|------|
 | GET | `/api/non-conformites` | List all | Any |
 | GET | `/api/non-conformites/{id}` | Get by ID | Any |
-| GET | `/api/non-conformites/retour/{retourId}` | By return | Any |
+| GET | `/api/non-conformites/retour/{retourId}` | List by return | Any |
 | POST | `/api/non-conformites` | Create | QUALITE, ADMIN |
 | PUT | `/api/non-conformites/{id}` | Update | QUALITE, ADMIN |
 | DELETE | `/api/non-conformites/{id}` | Delete | ADMIN |
 
-### Users — `/api/utilisateurs`
+### Users
 
 | Method | Endpoint | Description | Role |
 |--------|----------|-------------|------|
@@ -141,38 +139,22 @@ All endpoints are prefixed with `/api`. Authentication endpoints are public; all
 | PUT | `/api/utilisateurs/{id}` | Update user | ADMIN |
 | DELETE | `/api/utilisateurs/{id}` | Delete user | ADMIN |
 
-### Dashboard — `/api/dashboard`
+### Dashboard
 
 | Method | Endpoint | Description | Role |
 |--------|----------|-------------|------|
 | GET | `/api/dashboard/stats` | Aggregated statistics | QUALITE, ADMIN |
 
-### History — `/api/historique`
+### History
 
 | Method | Endpoint | Description | Role |
 |--------|----------|-------------|------|
 | GET | `/api/historique/retour/{retourId}` | History for a return | Any |
 | GET | `/api/historique/recent` | Recent activity feed | Any |
 
----
-
-## Swagger UI
-
-Access the interactive API documentation at:
-
-**http://localhost:8080/swagger-ui.html**
-
-To authenticate:
-1. Call `POST /api/auth/login` with your credentials
-2. Copy the `token` from the response
-3. Click **Authorize** at the top of the Swagger page
-4. Enter `Bearer <your_token>` and confirm
-
----
-
 ## Default Credentials
 
-> Change these before deploying to production.
+Change these before deploying to production.
 
 | Role | Email | Password |
 |------|-------|----------|
@@ -180,13 +162,9 @@ To authenticate:
 | QUALITE | qualite@retours.com | Qualite123! |
 | EMPLOYE | employe@retours.com | Employe123! |
 
----
-
 ## Related Repository
 
-- **Frontend:** [RaturnManagementSystem_Frontend](https://github.com/syrinemrf/RaturnManagementSystem_Frontend) — Live at [gestion-retours-frontend-176480887870.europe-west1.run.app](https://gestion-retours-frontend-176480887870.europe-west1.run.app)
-
----
+Frontend: [RaturnManagementSystem_Frontend](https://github.com/syrinemrf/RaturnManagementSystem_Frontend) - Live at [gestion-retours-frontend-176480887870.europe-west1.run.app](https://gestion-retours-frontend-176480887870.europe-west1.run.app)
 
 ## License
 
