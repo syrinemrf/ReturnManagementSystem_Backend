@@ -1,20 +1,24 @@
-# Système de Gestion des Retours — Backend API
-# Product Return Management System — Backend API
+﻿# Return Management System — Backend API
 
-> Production-grade REST API built with Spring Boot 3 for managing product returns, non-conformities, and quality tracking.  
-> API REST de qualité production construite avec Spring Boot 3 pour la gestion des retours produits, non-conformités et suivi qualité.
+A production-ready REST API for managing product returns, non-conformities, and quality tracking. Built with Spring Boot 3 and secured with JWT authentication.
+
+## Live Application
+
+**[https://gestion-retours-frontend-176480887870.europe-west1.run.app](https://gestion-retours-frontend-176480887870.europe-west1.run.app)**
+
+> The frontend is deployed on Google Cloud Run and consumes this API.
 
 ---
 
-## Description
+## Features
 
-This backend provides a complete REST API for a **Product Return Management System** (Système de Gestion des Retours Produits).  
-It handles:
-- 🔄 Product return lifecycle management (EN_ATTENTE → EN_COURS → VALIDE / REJETE / TRAITE)
-- ⚠️ Non-conformity tracking with severity levels
-- 📋 Full audit trail / historique complet
-- 📊 Dashboard statistics
-- 🔐 JWT-based authentication with role-based access control (RBAC)
+- **JWT Authentication** — Stateless, token-based auth with role-based access control (ADMIN, QUALITE, EMPLOYE)
+- **Product Return Lifecycle** — Full state machine: `EN_ATTENTE → EN_COURS → VALIDE / REJETE / TRAITE`
+- **Non-Conformity Management** — Create and track quality non-conformities with severity levels (FAIBLE, MOYENNE, HAUTE, CRITIQUE)
+- **Audit Trail** — Every state change is automatically recorded in the history
+- **Dashboard Statistics** — Aggregated metrics for quality monitoring
+- **Email Alerts** — Automatic notifications for critical/high-severity non-conformities
+- **Swagger UI** — Interactive API documentation at `/swagger-ui.html`
 
 ---
 
@@ -35,156 +39,32 @@ It handles:
 
 ---
 
-## Architecture
+## Prerequisites
 
-```
-HTTP Request
-     │
-     ▼
-┌─────────────────────────────┐
-│       JwtAuthFilter         │  ← Validates Bearer token on every request
-└─────────────┬───────────────┘
-              │
-     ▼
-┌─────────────────────────────┐
-│        Controller Layer     │  ← REST endpoints, input validation (@Valid)
-│  AuthController             │
-│  RetourProduitController    │
-│  NonConformiteController    │
-│  UtilisateurController      │
-│  DashboardController        │
-│  HistoriqueRetourController │
-└─────────────┬───────────────┘
-              │
-     ▼
-┌─────────────────────────────┐
-│        Service Layer        │  ← Business logic, transactions
-│  AuthServiceImpl            │
-│  RetourProduitServiceImpl   │
-│  NonConformiteServiceImpl   │
-│  UtilisateurServiceImpl     │
-│  DashboardServiceImpl       │
-│  HistoriqueRetourServiceImpl│
-└─────────────┬───────────────┘
-              │
-     ▼
-┌─────────────────────────────┐
-│      Repository Layer       │  ← Spring Data JPA
-│  UtilisateurRepository      │
-│  RetourProduitRepository    │
-│  NonConformiteRepository    │
-│  HistoriqueRetourRepository │
-└─────────────┬───────────────┘
-              │
-     ▼
-┌─────────────────────────────┐
-│   PostgreSQL (Neon Cloud)   │
-└─────────────────────────────┘
-```
-
----
-
-## Project Structure
-
-```
-src/main/java/com/gestionretours/backend/
-├── BackendApplication.java
-├── config/
-│   ├── CorsConfig.java
-│   ├── DataInitializer.java
-│   ├── EntityMapper.java
-│   ├── SecurityConfig.java
-│   └── SwaggerConfig.java
-├── controller/
-│   ├── AuthController.java
-│   ├── DashboardController.java
-│   ├── HistoriqueRetourController.java
-│   ├── NonConformiteController.java
-│   ├── RetourProduitController.java
-│   └── UtilisateurController.java
-├── exception/
-│   ├── BadRequestException.java
-│   ├── GlobalExceptionHandler.java
-│   ├── ResourceNotFoundException.java
-│   └── UnauthorizedException.java
-├── model/
-│   ├── dto/
-│   │   ├── request/
-│   │   │   ├── ChangerEtatRequest.java
-│   │   │   ├── LoginRequest.java
-│   │   │   ├── NonConformiteRequest.java
-│   │   │   ├── RegisterRequest.java
-│   │   │   └── RetourRequest.java
-│   │   └── response/
-│   │       ├── ApiErrorResponse.java
-│   │       ├── AuthResponse.java
-│   │       ├── DashboardStatsResponse.java
-│   │       ├── HistoriqueRetourResponse.java
-│   │       ├── NonConformiteResponse.java
-│   │       ├── RetourProduitResponse.java
-│   │       └── UtilisateurResponse.java
-│   ├── entity/
-│   │   ├── HistoriqueRetour.java
-│   │   ├── NonConformite.java
-│   │   ├── RetourProduit.java
-│   │   └── Utilisateur.java
-│   └── enums/
-│       ├── EtatTraitement.java
-│       ├── Gravite.java
-│       └── RoleUtilisateur.java
-├── repository/
-│   ├── HistoriqueRetourRepository.java
-│   ├── NonConformiteRepository.java
-│   ├── RetourProduitRepository.java
-│   └── UtilisateurRepository.java
-├── security/
-│   ├── JwtAuthFilter.java
-│   ├── JwtUtils.java
-│   └── UserDetailsServiceImpl.java
-└── service/
-    ├── AuthService.java
-    ├── DashboardService.java
-    ├── HistoriqueRetourService.java
-    ├── NonConformiteService.java
-    ├── RetourProduitService.java
-    ├── UtilisateurService.java
-    └── impl/
-        ├── AuthServiceImpl.java
-        ├── DashboardServiceImpl.java
-        ├── HistoriqueRetourServiceImpl.java
-        ├── NonConformiteServiceImpl.java
-        ├── RetourProduitServiceImpl.java
-        └── UtilisateurServiceImpl.java
-```
+- Java 17+
+- Maven 3.9+ (or use the included `mvnw` wrapper)
+- A PostgreSQL database (connection string required via environment variable)
 
 ---
 
 ## Getting Started
 
-### Prerequisites
-
-- Java 17+
-- Maven 3.9+ (or use the included `mvnw` wrapper)
-- Git
-
-### Installation & Run Locally
-
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/ReturnManagementSystem.git
-cd ReturnManagementSystem/backend
+git clone https://github.com/syrinemrf/ReturnManagementSystem_Backend.git
+cd ReturnManagementSystem_Backend
 
-# Run with Maven wrapper
-./mvnw spring-boot:run          # Linux/Mac
+# Set required environment variables (see section below), then run:
+./mvnw spring-boot:run          # Linux / Mac
 mvnw.cmd spring-boot:run        # Windows
 ```
 
-The API will start at: `http://localhost:8080`
+The API will be available at **http://localhost:8080**.
 
 ### Run with Docker
 
 ```bash
-# Build and start
+# Build and start all services
 docker-compose up --build
 
 # Run in background
@@ -196,66 +76,103 @@ docker-compose down
 
 ---
 
+## Environment Variables
+
+All sensitive configuration is provided via environment variables — nothing is hardcoded.
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `SPRING_DATASOURCE_URL` | PostgreSQL JDBC connection URL | — |
+| `SPRING_DATASOURCE_USERNAME` | Database username | — |
+| `SPRING_DATASOURCE_PASSWORD` | Database password | — |
+| `APP_JWT_SECRET` | JWT signing secret (min. 256-bit) | — |
+| `APP_JWT_EXPIRATION` | JWT expiry in milliseconds | `86400000` (24h) |
+| `APP_CORS_ALLOWED_ORIGINS` | Comma-separated allowed origins | `http://localhost:4200` |
+| `MAIL_USERNAME` | SMTP email address for alerts | — |
+| `MAIL_PASSWORD` | SMTP email password | — |
+| `MAIL_ALERT_RECIPIENT` | Recipient for critical NC alerts | — |
+| `SERVER_PORT` | Application port | `8080` |
+
+For local development, create `src/main/resources/application-local.properties` and set the variables there. This file is gitignored.
+
+---
+
 ## API Endpoints
 
-### 🔐 Authentication — `/api/auth`
+All endpoints are prefixed with `/api`. Authentication endpoints are public; all others require a valid `Bearer` token.
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/api/auth/login` | Login and get JWT token / Connexion | ❌ Public |
-| POST | `/api/auth/register` | Register new user / Inscription | ❌ Public |
+### Authentication — `/api/auth`
 
-### 📦 Product Returns — `/api/retours`
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/auth/login` | Login — returns JWT token | Public |
+| POST | `/api/auth/register` | Register a new user | Public |
 
-| Method | Endpoint | Description | Role Required |
-|--------|----------|-------------|---------------|
-| GET | `/api/retours` | Get all returns / Tous les retours | 🔑 Any authenticated |
-| GET | `/api/retours/{id}` | Get return by ID | 🔑 Any authenticated |
-| GET | `/api/retours/etat/{etat}` | Filter by state / Filtrer par état | 🔑 Any authenticated |
-| POST | `/api/retours` | Create return / Créer un retour | 🟡 EMPLOYE, QUALITE, ADMIN |
-| PUT | `/api/retours/{id}` | Update return / Modifier un retour | 🟠 QUALITE, ADMIN |
-| PUT | `/api/retours/{id}/etat` | Change state / Changer l'état | 🟠 QUALITE, ADMIN |
-| DELETE | `/api/retours/{id}` | Delete return / Supprimer | 🔴 ADMIN only |
+### Product Returns — `/api/retours`
 
-### ⚠️ Non-Conformities — `/api/non-conformites`
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| GET | `/api/retours` | List all returns | Any |
+| GET | `/api/retours/{id}` | Get return by ID | Any |
+| GET | `/api/retours/etat/{etat}` | Filter by state | Any |
+| POST | `/api/retours` | Create a return | EMPLOYE, QUALITE, ADMIN |
+| PUT | `/api/retours/{id}` | Update a return | QUALITE, ADMIN |
+| PUT | `/api/retours/{id}/etat` | Change return state | QUALITE, ADMIN |
+| DELETE | `/api/retours/{id}` | Delete a return | ADMIN |
 
-| Method | Endpoint | Description | Role Required |
-|--------|----------|-------------|---------------|
-| GET | `/api/non-conformites` | Get all / Toutes | 🔑 Any authenticated |
-| GET | `/api/non-conformites/{id}` | Get by ID | 🔑 Any authenticated |
-| GET | `/api/non-conformites/retour/{retourId}` | By return ID / Par retour | 🔑 Any authenticated |
-| POST | `/api/non-conformites` | Create / Créer | 🟠 QUALITE, ADMIN |
-| PUT | `/api/non-conformites/{id}` | Update / Modifier | 🟠 QUALITE, ADMIN |
-| DELETE | `/api/non-conformites/{id}` | Delete / Supprimer | 🔴 ADMIN only |
+### Non-Conformities — `/api/non-conformites`
 
-### 👥 Users — `/api/utilisateurs`
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| GET | `/api/non-conformites` | List all | Any |
+| GET | `/api/non-conformites/{id}` | Get by ID | Any |
+| GET | `/api/non-conformites/retour/{retourId}` | By return | Any |
+| POST | `/api/non-conformites` | Create | QUALITE, ADMIN |
+| PUT | `/api/non-conformites/{id}` | Update | QUALITE, ADMIN |
+| DELETE | `/api/non-conformites/{id}` | Delete | ADMIN |
 
-| Method | Endpoint | Description | Role Required |
-|--------|----------|-------------|---------------|
-| GET | `/api/utilisateurs` | Get all users / Tous les utilisateurs | 🔴 ADMIN only |
-| GET | `/api/utilisateurs/{id}` | Get user by ID | 🔴 ADMIN only |
-| POST | `/api/utilisateurs` | Create user / Créer | 🔴 ADMIN only |
-| PUT | `/api/utilisateurs/{id}` | Update user / Modifier | 🔴 ADMIN only |
-| DELETE | `/api/utilisateurs/{id}` | Delete user / Supprimer | 🔴 ADMIN only |
+### Users — `/api/utilisateurs`
 
-### 📊 Dashboard — `/api/dashboard`
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| GET | `/api/utilisateurs` | List all users | ADMIN |
+| GET | `/api/utilisateurs/{id}` | Get user by ID | ADMIN |
+| POST | `/api/utilisateurs` | Create user | ADMIN |
+| PUT | `/api/utilisateurs/{id}` | Update user | ADMIN |
+| DELETE | `/api/utilisateurs/{id}` | Delete user | ADMIN |
 
-| Method | Endpoint | Description | Role Required |
-|--------|----------|-------------|---------------|
-| GET | `/api/dashboard/stats` | Dashboard statistics / Statistiques | 🟠 QUALITE, ADMIN |
+### Dashboard — `/api/dashboard`
 
-### 📋 History — `/api/historique`
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| GET | `/api/dashboard/stats` | Aggregated statistics | QUALITE, ADMIN |
 
-| Method | Endpoint | Description | Role Required |
-|--------|----------|-------------|---------------|
-| GET | `/api/historique/retour/{retourId}` | History by return / Historique par retour | 🔑 Any authenticated |
-| GET | `/api/historique/recent` | Recent activity / Activité récente | 🔑 Any authenticated |
+### History — `/api/historique`
+
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| GET | `/api/historique/retour/{retourId}` | History for a return | Any |
+| GET | `/api/historique/recent` | Recent activity feed | Any |
+
+---
+
+## Swagger UI
+
+Access the interactive API documentation at:
+
+**http://localhost:8080/swagger-ui.html**
+
+To authenticate:
+1. Call `POST /api/auth/login` with your credentials
+2. Copy the `token` from the response
+3. Click **Authorize** at the top of the Swagger page
+4. Enter `Bearer <your_token>` and confirm
 
 ---
 
 ## Default Credentials
 
-> ⚠️ Change these in production / Changez-les en production
+> Change these before deploying to production.
 
 | Role | Email | Password |
 |------|-------|----------|
@@ -265,60 +182,12 @@ docker-compose down
 
 ---
 
-## Swagger UI
+## Related Repository
 
-Once the application is running, access the interactive API documentation at:
-
-**URL:** `http://localhost:8080/swagger-ui.html`
-
-### How to authenticate in Swagger:
-1. Call `POST /api/auth/login` with your credentials
-2. Copy the `token` value from the response
-3. Click the **Authorize 🔒** button at the top right
-4. Enter: `Bearer <your_token>` in the value field
-5. Click **Authorize** → all secured endpoints are now accessible
-
----
-
-## Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `SPRING_DATASOURCE_URL` | PostgreSQL connection URL | Neon cloud URL |
-| `SPRING_DATASOURCE_USERNAME` | DB username | (set in .env) |
-| `SPRING_DATASOURCE_PASSWORD` | DB password | (set in properties) |
-| `SPRING_JPA_HIBERNATE_DDL_AUTO` | Schema strategy | update |
-| `APP_JWT_SECRET` | JWT signing secret | (set in properties) |
-| `APP_JWT_EXPIRATION` | JWT expiry in ms | 86400000 (24h) |
-| `SERVER_PORT` | Application port | 8080 |
-
----
-
-## Git Commit Convention
-
-This project follows the **Conventional Commits** specification:
-
-| Prefix | Usage |
-|--------|-------|
-| `feat:` | New feature / Nouvelle fonctionnalité |
-| `chore:` | Build config, tooling / Configuration, outils |
-| `fix:` | Bug fix / Correction de bug |
-| `docs:` | Documentation only / Documentation uniquement |
-| `refactor:` | Code refactor / Refactorisation |
-| `test:` | Test addition / Ajout de tests |
-
----
-
-## GitHub Repository Structure
-
-```
-ReturnManagementSystem/
-├── backend/        ← This Spring Boot API
-└── frontend/       ← Angular frontend (coming soon)
-```
+- **Frontend:** [RaturnManagementSystem_Frontend](https://github.com/syrinemrf/RaturnManagementSystem_Frontend) — Live at [gestion-retours-frontend-176480887870.europe-west1.run.app](https://gestion-retours-frontend-176480887870.europe-west1.run.app)
 
 ---
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License
